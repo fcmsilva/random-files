@@ -32,7 +32,7 @@ body {
 }
 
 .modal {
-  width: 80%;
+  width: 100%;
   max-width: 280px;
   height: 50%;
   overflow: visible !important;
