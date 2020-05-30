@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - PLUS</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css'>
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/@yaireo/tagify@3.9.3/dist/tagify.css'><link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<select id="profile-switch">
+		<option value="fsilva98" selected>fsilva98</option>
+		<option value="luisrosario98">luisrosario98</option>
+		<option value="jmonteiro">jmonteiro</option>
+		<option value="jfernandes">jfernandes</option>
+	</select>
+
+<div class="body-wrapper">
+
+	<!------------------------------------------------------------->
+	<!-------------------DEFAULT NAVBAR/FOOTER--------------------->
+	<!------------------------------------------------------------->
+	<div id="home-page-navbar" class="navbar flex" data-page="home-page">
+		<div class="left">
+			<div class="camera-btn" onclick="changePage('gallery-photo-page')"></div>
+			<div class="logo" onclick="changePage('home-page')"></div>
+		</div>
+		<div class="right">
+			<div class="dm-icon" onclick='changePage("messages-page")'>
+			</div>
+		</div>
+	</div>
+
+	<!------------------------------------------------------------->
+	<div id="default-bottom-nav" class="bottom-nav">
+		<div class="nav-btn home active" data-page="home-page"><i class="fas fa-home"></i></div>
+		<div class="nav-btn search" data-page="search-page"><i class="fas fa-search"></i></div>
+		<div class="nav-btn add" data-page="gallery-page"><i class="far fa-plus-square"></i></div>
+		<div class="nav-btn love" onclick="alert('not implemented')"><i class="far fa-heart"></i></div>
+		<div class="nav-btn me" onclick="goToMyProfile()"><i class="fas fa-user"></i></div>
+	</div>
+
+	<!------------------------------------------------------------->
+	<!-----------------------------HOMEPAGE------------------------>
+	<!------------------------------------------------------------->
+	<div id="home-page" class="page">
+		<div class="page-content">
+			<div class="story-row flex">
+				<!--aqui ou na hitbox do '+'?-->
+				<div class="story flex" id="my-story" onclick="changePage('add-story-page')">
+					<div class="page-logo">
+						<div class="new-story-btn">+</div>
+					</div>
+					<span>Adicionar história</span>
+				</div>
+			</div>
+			<div class="post-list">
+				<!--class=".post" * 1000-->
+			</div>
+		</div>
+	</div>
+	<!------------------------------------------------------------->
+	<!-----------------------------PROFILE------------------------->
+	<!------------------------------------------------------------->
+	<div id="profile-page-navbar" class="navbar flex" data-page="profile-page">
+		<div class="left">
+			<i style="align-self:center" class="fas fa-arrow-left" onclick="goToLastPage()"></i>
+			<b class="profile-name"></b>
+		</div>
+	</div>
+	<div id="profile-page" class="page">
+		<div class="page-content">
+			<div class="profile-info">
+				<div class="header flex">
+					<div class="left">
+						<div class="profile-logo flex"></div>
+					</div>
+					<div class="right flex">
+						<div class="stat-block" id="stats-posts">
+							<div class="stat-value">00</div>
+							<div class="stat-description">Publicações</div>
+						</div>
+						<div class="stat-block" id="stats-followers">
+							<div class="stat-value">00</div>
+							<div class="stat-description">Seguidores</div>
+						</div>
+						<div class="stat-block" id="stats-following">
+							<div class="stat-value">00</div>
+							<div class="stat-description">A seguir</div>
+						</div>
+					</div>
+				</div>
+				<div class="bio-section">
+					<div class="profile-name"></div>
+					<div class="bio"></div>
+				</div>
+				<div class="cta-section flex">
+					<div class="follow-btn btn">Seguir</div>
+					<a class="donate-btn btn" href="#donate-modal" rel="modal:open">Doar</a>
+					<div id="donate-modal" class="modal">
+						<p>Select your payment method:</p>
+						<a href="#"  class="pay-option btn" id="paypal-btn">Paypal</a>
+						<a href="#" class="pay-option btn" id="credit-btn">Cartão Crédito</a>
+						<a href="#"  class="pay-option btn" id="debit-card">Cartão Débito</a>
+						<input type="number" id="donate-ammount" placeholder="Quantia a doar (€)">
+						<div id="paypal-form" class="hidden pay-form">
+							<input type="email" placeholder="Endereço do Paypal" id="paypal-address">
+						</div>
+						<div id="card-form" class="hidden pay-form">
+							<input type="text" class="card-num" placeholder="Número do Cartão" id="card-num" maxlength=16>
+							<div class="">
+								<input type="text" class="card-num" placeholder="Titular do cartão" id="card-holder">
+							<input type="text" class="exp" placeholder="MM/AA" id="exp-date" maxlength=4>
+							<input type="text" placeholder="CCV" id="CVV" maxlength=3>
+								</div>
+						</div>
+						<a href="#" class="hidden donate-btn btn">Doar</a>
+					</div>
+				</div>
+			</div>
+			<div class="profile-posts">
+				<div class="private-msg">
+					Esta conta é privada
+					</br>
+					<span>Segue esta conta para veres as suas fotos</span>
+				</div>
+				<div class="posts-list">
+					
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!------------------------------------------------------------->
+	<!-----------------------------DMS----------------------------->
+	<!------------------------------------------------------------->
+	<div id="messages-page-navbar" class="navbar flex" data-page="messages-page">
+		<div class="left">
+			<i style="align-self:center" class="fas fa-arrow-left" onclick="goToLastPage()"></i>
+			<b style="margin-left:15px;">Mensagens</b>
+		</div>
+	</div>
+	<div id="messages-page" class="page">
+		<div class="page-content">
+			<p class="page-title">Mensagens</p>
+			<div class="thread-list">
+
+			</div>
+		</div>
+	</div>
+	<div id="thread-page-navbar" class="navbar flex" data-page="thread-page">
+		<div class="left">
+			<i style="align-self:center" class="fas fa-arrow-left" onclick="goToLastPage()"></i>
+			<b style="margin-left:15px;">Mensagens</b>
+		</div>
+	</div>
+	<div class="page" id="thread-page">
+		<div class="page-content">
+			<div class="msg-list">
+
+			</div>
+			<form action="" id="send-msg-form">
+				<input type="text" placeholder="Insira uma mensagem">
+			</form>
+		</div>
+	</div>
+	
+	
+	
+	
+	<div id="post-page" class="page">
+		<div class="page-content">
+		</div>
+	</div>
+	
+	<div id="search-page-navbar" class="navbar flex" data-page="search-page">
+		<div class="left flex">
+			<i class="fas fa-search"></i>
+			<input type="text" placeholder="Pesquise" id="search-profile">
+		</div>
+	</div>
+	<div id="search-page" class="page">
+		<div class="page-content">
+			<div class="result-list">
+				
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	<div id="gallery-page-navbar" class="navbar flex" data-page="gallery-page">
+		<div class="left">
+			<i style="align-self:center" class="fas fa-times" onclick="changePage('home-page')"></i>
+		</div>
+		<div class="right"><b><a class="gallery-next" href="#">Seguinte</a></b></div>
+	</div>
+
+	<div class="bottom-nav" id="gallery-page-bottom-nav" data-page="gallery-page gallery-photo-page gallery-video-page">
+		<div class="tabs">
+			<div class="tab active nav-btn" id="gallery-tab" data-page="gallery-page">Galeria</div>
+			<div class="tab nav-btn" id="photo-tab" data-page="gallery-photo-page">Foto</div>
+			<!--<div class="tab nav-btn" id="video-tab" data-page="gallery-video-page">Video</div>-->
+		</div>
+	</div>
+	<div id="gallery-page" class="page gallery-pages">
+		<div class="page-content">
+			<div class="preview-section"></div>
+			<div class="gallery-selection">
+				<img src="https://raw.githubusercontent.com/fcmsilva/random-files/master/instastuff/gallery/imgs/img1.jpg" alt="">
+				<img src="https://raw.githubusercontent.com/fcmsilva/random-files/master/instastuff/gallery/imgs/img2.png" alt="">
+				<img src="https://raw.githubusercontent.com/fcmsilva/random-files/master/instastuff/gallery/imgs/img3.png" alt="" class="active">
+				<img src="https://raw.githubusercontent.com/fcmsilva/random-files/master/instastuff/gallery/imgs/img4.png" alt="">
+				<img src="https://raw.githubusercontent.com/fcmsilva/random-files/master/instastuff/gallery/imgs/img1.jpg" alt="">
+			</div>
+		</div>
+	</div>
+	
+	<div id="gallery-photo-page" class="page gallery-pages">
+		<div class="page-content">
+			<div class="preview-section">
+				<video style="width:100%" src="" autoplay=true></video>
+			</div>
+			<div class="btn-section">
+				<img src="" alt="">
+				<div class="take-picture-btn"></div>
+			</div>
+		</div>
+	</div>
+	
+	<div id="gallery-video-page" class="page gallery-pages">
+		<div class="page-content">
+			NOT IMPLEMENTED - provavelmente devia tirar esta opção e deixar só galeria/foto
+		</div>
+	</div>
+	
+	<div id="edit-page-navbar" class="navbar flex" data-page="edit-photo-page">
+		<div class="left">
+			<i style="align-self:center" class="fas fa-arrow-left" onclick="changePage('gallery-page')"></i>
+		</div>
+		<div class="right"><b><a class="edit-next" href="#">Seguinte</a></b></div>
+	</div>
+	
+	<div id="edit-photo-page" class="page gallery-pages">
+		<div class="page-content">
+			<div class="preview-section"></div>
+			<div class="filter-section">
+				<div class="filter-option active default" data-filters="">	
+					<div class="image"></div>
+					<span>Normal</span>
+				</div>
+				<div class="filter-option contrast" data-filters="contrast(2)">
+					<div class="image"></div>
+					<span>Contrast</span></div>
+				<div class="filter-option sepia" data-filters="sepia(1)">
+					<div class="image"></div>
+					<span>Sepia</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div id="post-page-navbar" class="navbar flex" data-page="post-photo-page">
+		<div class="left">
+			<i style="align-self:center" class="fas fa-arrow-left back"></i>
+		</div>
+		<div class="right"><b><a class="post-next" href="#">Partilhar</a></b></div>
+	</div>
+	
+	<div id="post-photo-page" class="page gallery-pages">
+		<div class="page-content">
+			<div class="post-form">
+				<div class="form-row subtitle-row flex">
+					<div class="image-thumb"></div>
+					<input type="text" id="post-description" placeholder="Escreve uma legenda...">
+				</div>
+				<div class="form-row tag-row felx">
+					<textarea placeholder='Identifica pessoas' id="people-tag"></textarea>
+				</div>
+				<div class="form-row location-row felx">
+					<textarea placeholder='Adicionar Localização' id="location-tag"></textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	
+	<div class="bottom-nav" data-page="add-story-page story-view-page" style="display:none"></div>
+	<div class="navbar" data-page="add-story-page story-view-page" style="display:none"></div>
+	<div id="add-story-page" class="page">
+		<video src="" id="story-camera" autoplay=true></video>
+		<img src="" id="story-preview" class="full-absolute" alt="">
+		<div class="top-fixed">
+		<i class="close-btn fas fa-times close-step1" onclick="changePage('home-page')"></i>
+		<i class="close-btn fas fa-times close-step2" onclick="changePage('add-story-page')"></i>
+		</div>
+		<div class="bottom-fixed">
+			<div class="effect-row flex">
+				<div class="picture-btn"></div>
+				<div class="share-btn">Partilhar História</div>
+			</div>
+			<div class="gallery-row">
+				<div class="gallery-btn"></div>
+			</div>
+		</div>
+	</div>
+	
+	<div id="story-view-page" class="page">
+		<div class="full-absolute story-wrapper">
+			<div class="clicker-left full-absolute"></div>
+			<div class="clicker-right full-absolute"></div>
+			<div class="img-list full-absolute default-bg">
+				<div class="top-info">
+					<div class="progress-blocks flex"></div>
+					</div>
+					<div class="person-row flex">
+						<div class="page-logo"></div>
+						<p class="username"></p>
+				</div>
+				<!-- <img src=".." data-i="0"> -->  
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+<!--TEMPLATES-->
+<!--TEMPLATES-->
+<!--TEMPLATES-->
+
+
+
+<div id="templates" style="display:none!important">
+	<div class="post">
+		<div class="header flex">
+			<div class="left flex">
+				<div class="page-logo" style="background-image:url('{{profileImage}}')"></div>
+				<div class="name-group">
+					<span class="name">{{user}}</span>
+					{{#if taggedUsers.length}}
+					<span class="others">
+					{{#each taggedUsers}}
+						<span class="other-person" onclick="changePage('profile-page',{handler:'{{this}}'})">{{this}}</span>
+					{{/each}}
+					</span>
+					{{/if}}
+					{{#if taggedLocation}}
+						<div class="location">{{taggedLocation}}</div>
+					{{/if}}
+				</div>
+			</div>
+		</div>
+		<div class="content">
+			<div class="image">
+				<div class="heart-overlay"><i class="fas fa-heart"></i></div>
+				<img src="{{imgUrl}}" alt="">
+			</div>
+			<div class="bottom-info">
+				<div class="interaction-bar flex">
+					<div class="left">
+						<div class="heart-btn  {{#if iLiked}} liked {{/if}}">
+							<i class="{{#if iLiked}} fas {{else}} far {{/if}} fa-heart"></i>
+						</div>
+						<div class="comment-btn"></div>
+						<div class="share-post-btn"></div>
+					</div>
+					<div class="right"></div>
+				</div>
+				<div class="comment-section">
+					<div class="like-info">
+						<span class="like-count">{{likes}}</span> gostos
+					</div>
+					<div class="description">
+						<span class="name">{{user}}</span>
+						<span class="msg">{{description}}</span>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="thread flex" onclick="changePage('thread-page',{{threadindex}})">
+		<div class="page-logo" style="background-image:url('{{img}}')"></div>
+		<div class="thread-title">
+			<div class="thread-name">{{name}}</div>
+			<div class="last-msg">{{lastmsg.content}}</div>
+		</div>
+	</div>
+
+	<div class="msg-block {{#if me}} me {{/if}}" data-date="{{date}}" data-sender="{{sender}}">
+		<div class="msg-content">{{content}}</div>
+	</div>
+	
+	<div class="post-thumbnail" data-index="{{imageindex}}">
+		<div class="image-block" style="background-image:url('{{imgUrl}}')"></div>
+	</div>
+	
+	<div class="search-profile flex" onclick='changePage("profile-page",{handler:"{{handler}}" })'>
+		<div class="page-logo" style="background-image:url('{{profileImage}}')"></div>
+		<div class="profile-title">
+			<div class="profile-name">{{name}}</div>
+			<div class="profile-handler">{{handler}}</div>
+		</div>
+	</div>
+	
+	<div class="story flex all-seen-{{allSeen}}" data-user="{{user}}"
+	onclick="changePage('story-view-page',{user:'{{user}}', single:{{#if single}}true{{else}}false{{/if}} }, true)">
+		<div class="page-logo" style="background-image:url('{{profileImg}}')">
+		</div>
+		<span>{{user}}</span>
+	</div>
+	
+	<div class="page-logo" style="background-image:url('{{profileImage}}')"></div>
+</div>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/@yaireo/tagify@3.9.3/dist/tagify.min.js'></script><script  src="./script.js"></script>
+
+</body>
+</html>

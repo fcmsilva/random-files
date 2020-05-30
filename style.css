@@ -1,0 +1,981 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap");
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none !important;
+}
+
+.jq-toast-loader.jq-toast-loaded {
+  display: none !important;
+}
+
+body {
+  background: #333;
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+.hidden {
+  display: none;
+}
+
+.full-absolute {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.modal {
+  width: 80%;
+  max-width: 280px;
+  height: 50%;
+  overflow: visible !important;
+}
+
+.page-dependent {
+  display: inline;
+}
+
+video {
+  transform: rotateY(180deg);
+}
+
+.profile-switch {
+  position: fixed;
+  top: 0;
+  left: 100%;
+  z-index: 999999;
+}
+
+.body-wrapper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 90%;
+  max-width: 280px;
+  max-height: 580px;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0px 0px 50px 10px rgba(0, 0, 0, 0.2);
+}
+@media only screen and (max-width: 600px) {
+  .body-wrapper {
+    max-width: 100%;
+    max-height: 100%;
+    border: none !important;
+    height: 100%;
+  }
+}
+.body-wrapper:after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  z-index: -1;
+}
+
+.flex {
+  display: flex;
+}
+.flex > * {
+  flex: 1 1 auto;
+  align-self: stretch;
+}
+
+.navbar,
+.bottom-nav,
+#home-page {
+  position: absolute !important;
+  left: 0;
+  width: 100%;
+}
+
+.navbar,
+.bottom-nav {
+  z-index: 99;
+}
+
+.navbar,
+.bottom-nav {
+  display: none;
+}
+.navbar.active,
+.bottom-nav.active {
+  display: flex;
+}
+
+.navbar {
+  background: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-bottom: 2px solid #ddd;
+  padding: 7px 0;
+}
+.navbar > * {
+  padding: 0 12px;
+}
+.navbar .left {
+  display: flex;
+}
+.navbar .left .camera-btn {
+  background: url("https://cdn3.iconfinder.com/data/icons/instagram-18/512/192_Instagram_Camera_Image-512.png");
+  width: 24px;
+  height: 100%;
+  background-position: center;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  margin-right: 10px;
+}
+.navbar .left .logo {
+  background-image: url("https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png");
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  transform: translate(0, 2px);
+  width: 100%;
+  height: 20px;
+  background-position: left;
+}
+.navbar .right {
+  display: flex;
+  justify-content: flex-end;
+}
+.navbar .right .dm-icon {
+  background: url("https://cdn.clipart.email/7ea8c17048b1e012c1cc87ebdc83d010_chat-communication-dm-email-letter-mail-message-icon_512-512.png");
+  height: 100%;
+  width: 20px;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.bottom-nav {
+  background: white;
+  color: #111;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px 0;
+}
+.bottom-nav#default-bottom-nav {
+  padding: 0;
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
+}
+.bottom-nav#default-bottom-nav .nav-btn {
+  flex: 1 0 auto;
+  position: relative;
+  text-align: center;
+  font-size: 1.15em;
+  border-bottom: 2px solid white;
+  padding: 5px 0;
+}
+.bottom-nav#default-bottom-nav .nav-btn.active {
+  border-bottom: 2px solid black;
+}
+
+#gallery-page-bottom-nav {
+  padding: 0;
+}
+#gallery-page-bottom-nav .tabs {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  height: 40px;
+  background: white;
+}
+#gallery-page-bottom-nav .tabs .tab {
+  cursor: pointer;
+  width: 33.33%;
+  padding: 4px 0;
+  flex: 1 1 auto;
+  text-align: center;
+  background: white;
+  position: relative;
+  top: 1px;
+  color: #888;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 0.8em;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid white;
+}
+#gallery-page-bottom-nav .tabs .tab.active {
+  color: #111;
+  border-bottom: 1px solid black;
+}
+
+.page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #FAFAFA;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1;
+  display: none;
+}
+.page.active {
+  display: block !important;
+}
+.page .page-content {
+  padding: 35px 0px 60px 0px;
+}
+
+@keyframes heart-jump {
+  0% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  20% {
+    transform: scale(1.35);
+    opacity: 1;
+  }
+  30% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+.default-bg, .page-logo {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: black;
+}
+
+.page-logo {
+  padding: 13px;
+  background-color: #bbb;
+  border-radius: 50%;
+  flex: 0 0 auto;
+  align-self: center;
+}
+
+.post {
+  background: white;
+  font-size: 13px;
+  font-weight: 600;
+}
+.post .header {
+  width: 100%;
+  background: white;
+  border-bottom: 1px solid gainsboro;
+  padding: 5px 10px;
+}
+.post .header .left .name-group {
+  align-self: center;
+  margin: -2px 0 0 10px;
+}
+.post .header .left .name-group .location {
+  font-size: 0.9em;
+}
+.post .header .left .name-group .others {
+  font-size: 0.9em;
+  margin-left: 2px;
+  position: relative;
+  top: -0.05em;
+}
+.post .header .left .name-group .other-person {
+  cursor: pointer;
+  margin-right: 5px;
+  font-weight: bold;
+  color: #666;
+}
+.post .header .left .name-group .others::before {
+  content: 'com ';
+  font-weight: normal;
+  color: #666;
+}
+.post .header .left .name-group .other-person:not(:last-of-type)::after {
+  content: ',';
+}
+.post .content .image {
+  position: relative;
+}
+.post .content .image .heart-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 50px;
+  text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.15);
+  visibility: hidden;
+  z-index: 8;
+}
+.post .content .image .heart-overlay.active {
+  visibility: visible;
+  animation: heart-jump 1.2s forwards;
+}
+.post .content .image img {
+  width: 100%;
+}
+.post .content .bottom-info {
+  padding: 8px 12px;
+}
+.post .content .interaction-bar i {
+  font-size: 20px;
+}
+.post .content .interaction-bar .heart-btn.liked i {
+  color: crimson;
+}
+.post .content .comment-section {
+  font-size: 0.9em;
+}
+.post .content .comment-section .like-info {
+  padding: 5px 0 5px 0;
+}
+.post .content .comment-section .description .msg {
+  font-weight: 400;
+}
+
+.post:nth-child(even) .image img {
+  filter: invert(1);
+}
+
+#home-page {
+  background: white;
+}
+#home-page .story-row {
+  padding: 5px 8px;
+  border-bottom: 1px solid gainsboro;
+}
+
+.story {
+  flex-direction: column;
+  justify-content: center;
+  font-size: 0.55em;
+  flex: 0 1 auto;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 10px;
+  padding: 3px;
+}
+.story .page-logo {
+  padding: 20px;
+  margin-bottom: 2px;
+  position: relative;
+}
+.story span {
+  max-width: 55px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  margin-top: 2px;
+}
+.story.all-seen-true .page-logo:before {
+  background: #aaa !important;
+}
+.story:not(#my-story) .page-logo {
+  border: 2px solid white;
+}
+.story:not(#my-story) .page-logo:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  padding: 4px;
+  box-sizing: content-box;
+  background: red;
+  z-index: -1;
+  border-radius: 50%;
+  background: linear-gradient(to right, red, purple);
+}
+.story#my-story span {
+  max-width: unset;
+}
+.story#my-story .page-logo {
+  position: relative;
+  padding: 22px;
+}
+.story#my-story .page-logo .new-story-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 13px;
+  height: 13px;
+  font-weight: 600;
+  background: dodgerblue;
+  color: white;
+  border: 1px solid white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: -1px;
+  left: -1px;
+  width: 100%;
+  height: 100%;
+  transform: none;
+  font-size: 2em;
+  border: 2px solid white;
+  box-sizing: content-box;
+}
+
+#profile-page-navbar .profile-name {
+  margin-left: 15px;
+  font-size: 0.9em;
+}
+
+#profile-page .page-content {
+  height: 100%;
+  padding-bottom: 40px;
+}
+#profile-page .page-content .profile-info {
+  padding: 0 12px 10px 12px;
+}
+#profile-page .page-content .profile-info .left {
+  width: 100%;
+  max-width: 80px;
+}
+#profile-page .page-content .profile-info .left .profile-logo {
+  height: 100%;
+  width: 100%;
+  padding: 10px 3px;
+  align-items: center;
+  justify-content: center;
+}
+#profile-page .page-content .profile-info .left .profile-logo span {
+  display: none;
+}
+#profile-page .page-content .profile-info .left .profile-logo .story {
+  width: 100%;
+  margin: 0;
+}
+#profile-page .page-content .profile-info .left .profile-logo .page-logo {
+  padding: 45%;
+}
+#profile-page .page-content .profile-info .right .stat-block {
+  text-align: center;
+  align-self: center;
+}
+#profile-page .page-content .profile-info .right .stat-block .stat-value {
+  font-weight: bold;
+}
+#profile-page .page-content .profile-info .right .stat-block .stat-description {
+  font-size: 0.7em;
+}
+#profile-page .page-content .profile-info .bio-section {
+  font-size: 0.8em;
+}
+#profile-page .page-content .profile-info .bio-section .profile-name {
+  font-weight: bold;
+}
+#profile-page .page-content .profile-info .cta-section {
+  margin-top: 10px;
+}
+#profile-page .page-content .profile-info .cta-section .btn {
+  background: white;
+  border: 1px solid gainsboro;
+  margin: 0 3px;
+  padding: 5px 0;
+  font-size: 0.7em;
+  line-height: 1em;
+  font-weight: bold;
+}
+#profile-page .page-content .profile-info .cta-section .follow-btn:not(.following) {
+  background: dodgerblue;
+  color: white;
+}
+#profile-page .page-content .profile-posts {
+  border-top: 1px solid gainsboro;
+  background: white;
+  height: 100%;
+}
+#profile-page .page-content .profile-posts:not(.private) .private-msg {
+  display: none;
+}
+#profile-page .page-content .profile-posts.private .posts-list {
+  display: none;
+}
+#profile-page .page-content .profile-posts.private .private-msg {
+  margin: 20px;
+  font-size: 0.85em;
+  font-weight: bold;
+  text-align: center;
+}
+#profile-page .page-content .profile-posts.private .private-msg span {
+  color: #777;
+  font-weight: normal;
+}
+#profile-page .page-content .profile-posts .posts-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+#profile-page .page-content .profile-posts .posts-list .post-thumbnail {
+  width: 33.33%;
+  border: 2px solid white;
+  padding-top: 33.33%;
+  position: relative;
+}
+#profile-page .page-content .profile-posts .posts-list .post-thumbnail .image-block {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+}
+
+#donate-modal {
+  font-size: 0.85em;
+  padding: 20px;
+}
+#donate-modal .btn {
+  font-size: inherit;
+  border: 2px solid gainsboro;
+  background: white;
+  padding: 6px 8px;
+}
+#donate-modal .btn:hover, #donate-modal .btn.active {
+  background: dodgerblue;
+  color: white;
+}
+
+a.close-modal {
+  right: 0 !important;
+}
+
+body #donate-modal .btn {
+  font-size: 0.9em;
+  padding: 5px 6px;
+  border: 1px solid gainsboro;
+  margin-top: -9px;
+}
+
+#donate-modal .pay-option {
+  font-size: 0.85em;
+}
+
+#donate-modal {
+  background: #fafafa;
+}
+
+#donate-modal input {
+  width: 100%;
+  border-radius: 0;
+  border: none;
+  background: white;
+  padding: 5px 10px;
+  /* margin-bottom: 5px; */
+  background: #EEE;
+  margin: 5px 2px 5px 2px;
+}
+
+#donate-modal input.card-num {
+  margin-left: 0;
+}
+
+.pay-form {
+  margin-top: 12px;
+}
+
+#donate-modal a.donate-btn.btn {
+  margin-top: 10px;
+  padding: 5px 20px;
+  background: dodgerblue;
+  color: white;
+  width: 100%;
+  font-weight: bold;
+  /* font-size: 0.8em; */
+}
+
+div#donate-modal {
+  height: unset;
+}
+
+#messages-page {
+  padding: 20px 15px 0 15px;
+  background: white;
+}
+#messages-page .page-content .page-title {
+  font-weight: 600;
+  font-size: 1em;
+}
+#messages-page .page-content .thread-list .thread {
+  font-size: 0.85em;
+  margin: 15px 5px;
+}
+#messages-page .page-content .thread-list .thread .page-logo {
+  padding: 25px;
+}
+#messages-page .page-content .thread-list .thread .thread-title {
+  margin: 0 10px;
+  align-self: center;
+}
+#messages-page .page-content .thread-list .thread .thread-title .last-msg {
+  color: #888;
+}
+
+#thread-page .page-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding-bottom: 45px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+#thread-page .page-content .msg-list {
+  display: flex;
+  flex-direction: column;
+}
+#thread-page .page-content .msg-list .msg-block {
+  align-self: flex-start;
+  max-width: 75%;
+  margin: 0 20px 12px 20px;
+  padding: 12px 10px;
+  padding-right: 15px;
+  background: white;
+  border-radius: 5px;
+  border: 1px solid gainsboro;
+}
+#thread-page .page-content .msg-list .msg-block.me {
+  align-self: flex-end;
+  background: gainsboro;
+  padding-left: 15px;
+}
+#thread-page .page-content input {
+  width: 100%;
+  border: 0;
+  padding: 10px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.15);
+}
+
+#search-page .page-content {
+  padding-top: 40px;
+}
+#search-page .result-list {
+  padding: 20px;
+}
+#search-page .result-list .search-profile {
+  margin-bottom: 15px;
+}
+#search-page .result-list .search-profile:not(.active) {
+  display: none;
+}
+#search-page .result-list .search-profile .page-logo {
+  padding: 23px;
+  margin-right: 12px;
+}
+#search-page .result-list .search-profile .profile-handler {
+  font-size: 0.9em;
+  color: #888;
+}
+
+#search-page-navbar {
+  padding: 0 5px;
+  background: #eee;
+}
+#search-page-navbar .flex {
+  align-items: center;
+}
+#search-page-navbar .flex > * {
+  flex: 0 1 auto;
+  align-self: center;
+}
+#search-page-navbar .flex input {
+  margin-left: 10px;
+  background: transparent;
+  border: none;
+  padding: 10px;
+  outline: none !important;
+}
+
+.gallery-pages .page-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.gallery-pages .preview-section {
+  width: 100%;
+  padding-top: 100%;
+  background: black;
+  background-position: center;
+  background-size: cover;
+  background-repeat: none;
+}
+.gallery-pages .gallery-selection {
+  display: flex;
+  flex-wrap: wrap;
+}
+.gallery-pages .gallery-selection img {
+  width: 25%;
+  flex: 0 0 auto;
+  border: 1px solid white;
+  flex-wrap: wrap;
+}
+.gallery-pages .gallery-selection img.active {
+  opacity: 0.3;
+}
+
+#gallery-photo-page .page-content {
+  padding-bottom: 40px;
+}
+#gallery-photo-page .preview-section {
+  height: unset;
+  background: white;
+  background: white;
+  position: relative;
+  overflow: visible;
+}
+#gallery-photo-page .preview-section video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  transform: translate(-50%, -50%) rotateY(180deg);
+}
+#gallery-photo-page .btn-section {
+  flex: 1 1 auto;
+  background: white;
+  position: relative;
+}
+#gallery-photo-page .btn-section .take-picture-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 20px;
+  border-radius: 50%;
+  border: 10px solid gainsboro;
+  background: white;
+  transform: translate(-50%, -50%);
+}
+#gallery-photo-page .btn-section .take-picture-btn:active {
+  border-color: #ccc;
+}
+
+#edit-photo-page .filter-option {
+  padding: 40px;
+  background: black;
+  margin: 3px;
+  position: relative;
+  color: #888;
+}
+#edit-photo-page .filter-option .image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+#edit-photo-page .filter-option.active {
+  color: #111;
+  font-weight: 600;
+}
+#edit-photo-page .filter-option span {
+  position: absolute;
+  font-weight: inherit;
+  color: inherit;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  font-size: 0.8em;
+}
+#edit-photo-page .filter-section {
+  display: flex;
+  flex: 1 0 auto;
+  align-items: center;
+  overflow-x: auto;
+  padding: 0 10px;
+  margin-top: 25px;
+  overflow: visible;
+}
+
+#post-photo-page {
+  background: white;
+}
+#post-photo-page .page-content {
+  margin-top: 4px;
+}
+#post-photo-page .form-row {
+  padding: 10px 15px;
+  border-bottom: 1px solid gainsboro;
+  width: 100%;
+}
+#post-photo-page .form-row.subtitle-row .image-thumb {
+  padding: 20px;
+  background-color: black;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-right: 10px;
+  flex: 0 0 auto;
+}
+#post-photo-page .form-row.subtitle-row input#post-description {
+  font-size: 0.8em;
+  border: none;
+  background: none;
+}
+#post-photo-page .form-row.tag-row textarea, #post-photo-page .form-row.tag-row .tagify, #post-photo-page .form-row.location-row textarea, #post-photo-page .form-row.location-row .tagify {
+  width: 100%;
+  font-size: 0.9em;
+}
+
+#add-story-page {
+  background-color: black;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+#add-story-page:not(.picture-taken) #story-preview,
+#add-story-page:not(.picture-taken) .share-btn,
+#add-story-page:not(.picture-taken) .close-step2 {
+  display: none;
+}
+#add-story-page.picture-taken .picture-btn,
+#add-story-page.picture-taken #story-camera,
+#add-story-page.picture-taken .close-step1 {
+  display: none;
+}
+#add-story-page.picture-taken .share-btn {
+  padding: 8px 10px;
+  background: white;
+  color: #111;
+  cursor: pointer;
+}
+#add-story-page video {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  transform: translate(-50%, 0%) rotateY(180deg);
+}
+#add-story-page .top-fixed,
+#add-story-page .bottom-fixed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  z-index: 99;
+}
+#add-story-page .bottom-fixed {
+  bottom: 0;
+  top: unset;
+}
+#add-story-page .bottom-fixed .effect-row {
+  justify-content: center;
+}
+#add-story-page .bottom-fixed .effect-row .picture-btn {
+  padding: 25px;
+  background: white;
+  flex: 0 1 auto;
+  border-radius: 50%;
+  position: relative;
+  border: 4px solid gainsboro;
+}
+#add-story-page .top-fixed {
+  text-align: right;
+  font-size: 1.7em;
+  color: white;
+}
+#add-story-page .top-fixed .close-btn {
+  margin: -5px 10px 0 0;
+}
+
+#story-view-page .story-wrapper .clicker-left,
+#story-view-page .story-wrapper .clicker-right {
+  z-index: 9999;
+}
+#story-view-page .story-wrapper .clicker-left {
+  left: 0;
+  width: 50%;
+}
+#story-view-page .story-wrapper .clicker-right {
+  right: 0;
+  left: unset;
+  width: 50%;
+}
+#story-view-page .story-wrapper .img-list img {
+  z-index: 999;
+}
+#story-view-page .story-wrapper .person-row {
+  align-items: center;
+  position: absolute;
+  width: 100%;
+  z-index: 999999;
+  cursor: pointer;
+}
+#story-view-page .story-wrapper .person-row p {
+  margin: 0;
+  /*! margin-left: 5px; */
+  font-weight: bold;
+  color: white;
+  font-size: 0.8em;
+  line-height: 2em;
+}
+#story-view-page .story-wrapper .person-row .page-logo {
+  margin: 0 10px 0 5px;
+}
+#story-view-page .story-wrapper .prog-block {
+  padding: 2px;
+  background: rgba(255, 255, 255, 0.5);
+  z-index: 5;
+  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
+  margin: 2px;
+  position: relative;
+}
+#story-view-page .story-wrapper .prog-block:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 0%;
+  top: 0;
+  height: 100%;
+  background: white;
+  transition-duration: 4s;
+  transition-timing-function: linear;
+}
+#story-view-page .story-wrapper .prog-block.active:before {
+  width: 100%;
+}
+#story-view-page .story-wrapper .top-info {
+  padding: 2px 0 5px 0;
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 20px 35px rgba(0, 0, 0, 0.4);
+  z-index: 104;
+}
+#story-view-page .story-wrapper .progress-blocks {
+  flex-direction: row;
+}
+#story-view-page .story-wrapper .prog-block.active {
+  opacity: 1;
+}
