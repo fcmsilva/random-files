@@ -236,6 +236,7 @@ let allData = {
 			"followers":[],
 			//notused->"posts":["postId1","postId2"]
 		},
+		"joey": newProfile({handler:"joey", name:"Joey Tribbiani", bio:"", private: false,"profileImage":"https://i0.wp.com/www.fatosdesconhecidos.com.br/wp-content/uploads/2017/09/7-59.jpg?resize=300,300"}),
 		"luisrosario98":newProfile({handler:"luisrosario98", name:"Luís Rosário", bio:"melides, born and raised", private: true, 				 
 				"profileImage":"https://raw.githubusercontent.com/fcmsilva/random-files/master/instastuff/gallery/imgs/img1.jpg"})
 	},
@@ -306,16 +307,14 @@ let allData = {
 				"users":["fsilva98","luisrosario98"],
 				"msgs":[
 					//as datas não hão de servir pra nada, mas deixa
-					{"sender":"fsilva98","content":"Boas","date":"2020-05-06T17:58:25.361Z"},
-					{"sender":"luisrosario98","content":"Broas","date":"2020-05-06T17:59:25.361Z"}
+					{"sender":"luisrosario98","content":"Olá!","date":"2020-05-06T17:58:25.361Z"}
 				]
 			},
 			{
-				"users":["fsilva98","mickey"],
+				"users":["fsilva98","joey"],
 				"msgs":[
 					//as datas não hão de servir pra nada, mas deixa
-					{"sender":"fsilva98","content":"NO","date":"2020-05-06T17:58:25.361Z"},
-					{"sender":"mickey","content":"NOLAST","date":"2020-05-06T17:59:25.361Z"}
+					{"sender":"joey","content":"How you doin'?","date":"2020-05-06T17:59:25.361Z"}
 				]
 			}
 		]
