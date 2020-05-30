@@ -523,9 +523,9 @@ function paymentHandler(info){
 		if(!(money > 0)){
 			alert("Quantia tem de ser superior a zero");return;
 		}
-		let CVV = $modal.find("#CVV").val();
-		let exp = $modal.find("#exp-date").val();
-		let num = $modal.find("#card-num").val();
+		let CVV = $modal.find("#CVV").val().replace(/ /g,"");
+		let exp = $modal.find("#exp-date").val().replace(/ /g,"");
+		let num = $modal.find("#card-num").val().replace(/ /g,"");
 		if($("#paypal-form").hasClass("hidden") && (CVV.length!=3 || CVV == "000" || exp.length!=4 || num.length!=16)){
 			alert("Dados de pagamento inválidos");return;
 		} 
