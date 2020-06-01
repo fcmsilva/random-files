@@ -1,13 +1,8 @@
-//DEFINE IF MOBILE
-var isMobile = false; //initiate as false
-// device detection
-if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) 
-    || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0,4))) { 
-    isMobile = true;
-}
-console.log("isMobile: ",isMobile)
+//-----------------------------------------
+//--HELPER FUNCIONS
+//-----------------------------------------
 
-//HELPERS
+// - GENERIC HELPERS - 
 function clone(obj){
 	return Object.assign({}, obj); 
 }
@@ -19,7 +14,9 @@ function groupBy(xs, key) {
   }, {});
 }; 
 
-//CAMERA HELPERS
+// - CAMERA HELPERS - 
+
+//obtains camera permissions, streams video to given element
 function getCamera(videoElement){
 	return new Promise((res,rej)=>{
 		if (navigator.mediaDevices.getUserMedia) {
@@ -36,6 +33,8 @@ function getCamera(videoElement){
 	});
 }
 
+//get base64 image of current frame of given video element
+//extra calculations to crop image to the defined maxWidth and maxHeight
 function takePicture(videoElement, maxWidth, maxHeight){
 	maxWidth = maxWidth || $(".body-wrapper").width()
 	maxHeight = maxHeight || $(".body-wrapper").height()
@@ -43,42 +42,36 @@ function takePicture(videoElement, maxWidth, maxHeight){
 	var resultb64="";
     console.log("got picture: w:"+$(videoElement).width()+", h:"+$(videoElement).height());
 	var canvas = document.createElement("canvas");  
-	
-	canvas.width = $(videoElement).width();
-	canvas.height = $(videoElement).height();
-	
-	console.log("true vals",canvas.width,canvas.height)
-	console.log("maxs vals",maxWidth,maxHeight);
+	//the size of the video feed
+	let videoWidth = $(videoElement).width();
+	let videoHeight = $(videoElement).height();
+	//define the actual size of the image to export
+	canvas.width = Math.min(maxWidth,videoWidth);
+	canvas.height = Math.min(maxHeight,videoHeight);
+	//ratio between original and new width/height, used to crop it
+	let ratioW = videoWidth/canvas.width;
+	let ratioH = videoHeight/canvas.height;
 
-	let restrictWidth = Math.min(maxWidth,canvas.width);
-	let restrictHeight = Math.min(maxHeight,canvas.height);
-	let ratioW = canvas.width/restrictWidth;
-	let ratioH = canvas.height/restrictHeight;
-	canvas.width = restrictWidth;
-	canvas.heigth = restrictHeight;
-	console.log("canv vals",canvas.width,canvas.height);
-	console.log("ratio vals",ratioW,ratioH);
 	let ctx = canvas.getContext("2d")
-	//flip the output of img to match mirror
+	//flip the output of img to match mirrored video stream
 	ctx.translate(canvas.width, 0);
 	ctx.scale(-1, 1);
-	//draw image to base64
+	//draw image to base64, cropping at center
 	ctx.drawImage(videoElement,
 				canvas.width*(1-ratioW)/2, canvas.height*(1-ratioH)/2,
 				canvas.width*ratioW,canvas.height*ratioH);  
 	resultb64=canvas.toDataURL();
-	window.lastPicture = resultb64;
 	console.log("image size: "+resultb64.length)
 	return resultb64;
 }
 
-//--START
-
 //-----------------------------------------
-//--DATA STUFF
+//--DATA / DATA HELPERS
 //-----------------------------------------
 
 
+// - DATA CREATION HELPERS -
+//  (creates objects, does not change app state)
 function newProfile(info){
 	return {
 		"handler":info.handler,   "name":info.name,
@@ -94,6 +87,8 @@ function newThread(info){
 	return {"users":info.users,"msgs":[]}
 }
 
+
+// - DATA GETTERS -
 let getters = {
 	getProfile: (handler)=>{return allData.profiles[handler]},
 	getPostsFromUser: (handler)=>{return allData.posts.filter(x=>x.user==handler)},
@@ -128,6 +123,7 @@ let getters = {
 	}
 }
 
+// - DATA EDIT/POST HELPERS -
 let action = {
 	likePost: (postObj) =>{
 		//se ainda n gostei
@@ -180,6 +176,8 @@ let action = {
 	}
 }
 
+// - CONTEXT DATA -
+// (current user, page navigation history, ...)
 let sessionData = {
 	"currentPage":"home-page",
 	"me": "fsilva98",
@@ -199,11 +197,9 @@ let sessionData = {
 	"currentPage": ()=>{return sessionData.pageHistory[sessionData.pageHistory.length-1]}
 }
 
-//page helpers
+// - PAGE NAVIGATION HELPERS -
 function goToLastPage(){
-	sessionData.pageHistory.pop();
-	let last = sessionData.pageHistory.pop();
-	//let last = sessionData.lastPage();
+	let last = sessionData.pageHistory.pop() && sessionData.pageHistory.pop();
 	if(last)
 		changePage(last[0],last[1])
 }
@@ -216,6 +212,7 @@ function refreshPage(){
 	changePage(page[0],page[1])
 }
 
+// - ALL APP DATA -
 let allData = {
 	//----------------PROFILES--------------
 	"profiles": {
@@ -322,17 +319,18 @@ let allData = {
 	}
 }
 
-
+// additions to inicial state
 allData.profiles.jmonteiro = (newProfile({handler:"jmonteiro", name:"João Monteiro", bio:"", private: false}))
 
 allData.profiles.jfernandes = (newProfile({handler:"jfernandes", name:"João Fernandes", bio:"", private: true}))
 
-//test follow
 action.followUser(getters.getProfile("luisrosario98"))
+
 //-----------------------------------------
-//--UI STUFF
+//-- UI/PAGE HANDLING --
 //-----------------------------------------
 
+//each key maps an element's ID, each value a function that'll handle the page load
 let pageHandlers = {
 	"home-page": homePageHandler,
 	"profile-page": profilePageHandler,
@@ -342,14 +340,13 @@ let pageHandlers = {
 	"search-page":searchPageHandler,
 	"gallery-page":galleryPageHandler,
 	"gallery-photo-page":galleryPhotoPageHandler,
-	"gallery-video-page":galleryVideoPageHandler,
 	"edit-photo-page":editPhotoPageHandler,
 	"post-photo-page":postPhotoHandler,
 	"add-story-page":addStoryHandler,
 	"story-view-page":storyViewHandler
 }
 
-function changePage(id,info, omitHistory){
+function changePage(id, info, omitHistory){
 	if(!omitHistory)
 		sessionData.pageHistory.push([id,info])
 	$(".page, .navbar,.bottom-nav").removeClass("active")
@@ -365,15 +362,16 @@ function changePage(id,info, omitHistory){
 	if(customBottom.length){  customBottom.addClass("active"); }
 	else{ deafultBottom.addClass("active"); }
 	pageHandlers[id](info);
-	//
+	
 	deafultBottom.find(".nav-btn").removeClass("active")
 	deafultBottom.find(".nav-btn[data-page*='"+id+"']").addClass("active")
 }
 
-//--------------------------------- 
-//------------PAGE TRIGGERS---------------- 
-//--------------------------------- 
-		//homepage
+//-----------------------------------------
+//-- PAGE HANDLERS --
+//-----------------------------------------
+
+// - HOMEPAGE -
 function homePageHandler(){
 	//load feed with all, TEMPORARY; TODO
 	$("#home-page .post-list").html("");
@@ -415,7 +413,7 @@ function homepageLoadStories(){
 	
 }
 
-//PROFILE PAGE------------------------------
+// -- PROFILE PAGE --
 function profilePageHandler(info){
 	if(!getters.getProfile(info.handler)){
 		goToLastPage();
@@ -539,7 +537,7 @@ function paymentHandler(info){
 	})
 }
 
-//DMS PAGE------------------------------
+// -- MESSAGES PAGE --
 function messagesPageHandler(){
 	$("#messages-page .thread-list").html("");
 	let threads = getters.getUserThreads(sessionData.me)
@@ -558,7 +556,7 @@ function messagesPageHandler(){
 	
 }
 
-//POST PAGE------------------------------
+// -- POST VIEW PAGE --
 function postPageHandler(post){
 	post.iLiked = (post.usersLiked.includes(sessionData.me))
 	post.profileImage = getters.getProfile(post.user).profileImage;
@@ -596,7 +594,7 @@ function threadPageHandler(threadindex){
 	})
 }
 
-//SEARCH PAGE------------------------------
+// -- SEARCH PAGE --
 function searchPageHandler(data){
 	let $input = $("input#search-profile")
 	$input.val("").focus().trigger("keyup")
@@ -620,6 +618,8 @@ function searchPageHandler(data){
 	})
 } 
 
+// -- GALLERY PAGES --
+// Main page, loads from gallery
 function galleryPageHandler(data){
 	$(".bottom-nav .tabs .tab").removeClass("active")	
 	$(".bottom-nav .tabs .tab#gallery-tab").addClass("active")
@@ -642,6 +642,8 @@ function galleryPageHandler(data){
 	});
 	
 }
+
+// Add photo with camera
 function galleryPhotoPageHandler(data){
 	$(".bottom-nav .tabs .tab").removeClass("active")	
 	$(".bottom-nav .tabs .tab#photo-tab").addClass("active")	
@@ -660,11 +662,8 @@ function galleryPhotoPageHandler(data){
 		},1)
 	})
 }
-function galleryVideoPageHandler(data){
-	$(".bottom-nav .tabs .tab").removeClass("active")	
-	$(".bottom-nav .tabs .tab#video-tab").addClass("active")	
-}
 
+// Edit page (add filters)
 function editPhotoPageHandler(imgUrl){
 	let $preview = $("#edit-photo-page .preview-section");
 	let $filters = $("#edit-photo-page .filter-option");
@@ -703,6 +702,7 @@ function editPhotoPageHandler(imgUrl){
 	$("#edit-photo-page .filter-option.default").click();
 }
 
+// Post Photo (add description/location/tags)
 function postPhotoHandler(postObj){
 	let $page = $("#post-photo-page");
 	let $thumbnail = $page.find(".image-thumb")
@@ -764,6 +764,7 @@ function postPhotoHandler(postObj){
 	})
 }
 
+// -- ADD STORY PAGE --
 function addStoryHandler(){
 	let $page = $("#add-story-page")
 	let video = $page.find("video")[0]
@@ -788,73 +789,78 @@ function addStoryHandler(){
 	
 }
 
+// -- VIEW STORY PAGE --
 function storyViewHandler(data){
-	let user = data.user;
+	//this method is somewhat confusing
+	//tricky css manipulation for story progress bar / retrieving next story to play (or page to jump to)
+
+	//show only this group of stories
 	let isSingle = data.single;
+	let user = data.user;
 	
 	let storyGroupObj = getters.getGroupedStories()[user]
 	let $imgList = $("#story-view-page .img-list");
+
+	//set profile name handler to link to profile
 	$("#story-view-page .username").text(user).off("click").click(()=>{
 		changePage("profile-page",user);
 	});
+	//set profile picture
 	$("#story-view-page .page-logo").css("background-image","url('"+storyGroupObj.profileImg+"')")
-	let $imgs = []
+	//reset click handlers to avoid double triggers
 	$("#story-view-page .clicker-left, #story-view-page .clicker-right").off("click")
 
-	//last page that isn't a story
-	function goToPrevPage(){
-		let prevPage = ["home-page"]
-		for(let i=sessionData.pageHistory.length-1;i>=0;i--){
-			let page = sessionData.pageHistory[i]
-			if(!page[0].includes("story")){
-				prevPage = page;
-				break;
-			}
-		}
-		return changePage(prevPage[0],prevPage[1],true)
-	}
+	//either goes to next group of stories or exits back to previous page
 	function nextAction(){
 		let groups = getters.getGroupedStories()
 		let storyKeys = Object.keys(groups)
 		let groupIndex = storyKeys.indexOf(user)
 		let nextGroup = groups[storyKeys[groupIndex+1]]
 
-		if((groupIndex == storyKeys.length-1))
-			return goToPrevPage()
-		else{
+		if((groupIndex == storyKeys.length-1) || isSingle)
+			//last groups of stories or "single" view, exit to prev. page
+			return goToLastPage()
+		else {
+			//go to next group of stories (if it's new)
 			let thisSeen = storyGroupObj[storyGroupObj.length-1].seen
 			let nextSeen = nextGroup[nextGroup.length-1].seen
-			if((!thisSeen && nextSeen))
-				return goToPrevPage()
+			console.log(thisSeen,nextSeen)
+			if(nextSeen)
+				return goToLastPage()
 			return changePage('story-view-page',{user:storyKeys[groupIndex+1]},true)
 		} 
 	}
-	if(isSingle){
-		nextAction = function(){goToPrevPage()}
-	} 
 	
+	//current image from the group
 	let imgIndex = 0;
-	//get first story not seen
-	for(let i=0;i<storyGroupObj.length;i++){
-		if(!storyGroupObj[i].seen){
-			imgIndex=i;break;
-		} else if(i==storyGroupObj.length-1)
-			imgIndex=0;
-	}
 
-	window.stepInterval = null;
+	//jump to first story not seen
+	for(imgIndex = 0; imgIndex < storyGroupObj.length; imgIndex++)
+		if(!storyGroupObj[imgIndex].seen)
+			break;
+
+	//if all seen, go back to first
+	imgIndex = imgIndex % storyGroupObj.length
+	
+	//interval that changes story every 4 seconds
+	let stepInterval = null;
+	let stepTiming = 4000;
+
 	function show(i){
-		clearInterval(stepInterval)
 		if(i >= storyGroupObj.length)
 			return nextAction();
 		else if(i < 0)
 			i = imgIndex = 0;
 		
-		stepInterval = setInterval(next,40000000)
+		//reset & set timer
+		clearInterval(stepInterval);
+		stepInterval = setInterval(next,stepTiming)
 
+		//display current image and set as seen
 		$imgList.css("background-image","url('"+storyGroupObj[i].imgUrl+"')")
 		allData.stories.filter(s=>s.user==user)[i].seen = true
 
+		//update progress bar
 		let blocksAct = '<div class="prog-block active"></div>'.repeat(i)
 		let blocksNot = '<div class="prog-block"></div>'.repeat(storyGroupObj.length-i)
 		$(".progress-blocks").html(blocksAct+blocksNot)
@@ -870,8 +876,10 @@ function storyViewHandler(data){
 	$(".clicker-left").click(last)
 	$(".clicker-right").click(next)
 }
+
+
 //--------------------------------- 
-//------------GENERIC/NAVS---------------- 
+//-- NAVBARS --
 //--------------------------------- 
 function navbarLoad(){
 
@@ -884,8 +892,9 @@ function bottomNavLoad(){
 		if(pageId) changePage(pageId)
 	})
 }
+
 //--------------------------------- 
-//------------TEMPLATES---------------- 
+//-- TEMPLATES --
 //--------------------------------- 
 function postTrigger($postEl,postObj){
 	$postEl.find(".image img").css("filter",postObj.filters);
@@ -930,12 +939,14 @@ function thumbTrigger($thumbEl,postObj){
 	});
 }
 
+//if defined, call handler function for each template render
 let templateTriggers = {
 	"post": postTrigger,
 	"post-thumbnail":thumbTrigger,
-	//"story":storyTrigger
 }
 
+//returns function that renders a template
+//which in turn returns that template's JQuery object.
 function toTemplate(templateClass){
 	return function(obj){
 		let $el = $(Handlebars.compile($('<div>').append($('#templates > .'+templateClass).clone()).html())(obj));
@@ -955,15 +966,18 @@ let templates = {
 	pageLogo: toTemplate("page-logo")
 }
 
-//start
+//--------------------------------- 
+//-- START APP --
+//--------------------------------- 
 function load(){
-	//CHANGE BACK
-	changePage("home-page",{handler:"luisrosario98"}); 
+	changePage("home-page"); 
 	navbarLoad();
 	bottomNavLoad();
 } 
 
+load();
 
+//-- CHANGE PROFILES --
 $("#profile-switch").on("change",()=>{
 	let user = $("#profile-switch").val();
 	sessionData.me = user;
@@ -972,4 +986,4 @@ $("#profile-switch").on("change",()=>{
 })
 $("#profile-switch").trigger("change")
 
-load();
+

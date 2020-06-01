@@ -200,11 +200,10 @@
 		<div class="right"><b><a class="gallery-next" href="#">Seguinte</a></b></div>
 	</div>
 
-	<div class="bottom-nav" id="gallery-page-bottom-nav" data-page="gallery-page gallery-photo-page gallery-video-page">
+	<div class="bottom-nav" id="gallery-page-bottom-nav" data-page="gallery-page gallery-photo-page">
 		<div class="tabs">
 			<div class="tab active nav-btn" id="gallery-tab" data-page="gallery-page">Galeria</div>
 			<div class="tab nav-btn" id="photo-tab" data-page="gallery-photo-page">Foto</div>
-			<!--<div class="tab nav-btn" id="video-tab" data-page="gallery-video-page">Video</div>-->
 		</div>
 	</div>
 	<div id="gallery-page" class="page gallery-pages">
@@ -238,11 +237,6 @@
 		</div>
 	</div>
 	
-	<div id="gallery-video-page" class="page gallery-pages">
-		<div class="page-content">
-			NOT IMPLEMENTED - provavelmente devia tirar esta opção e deixar só galeria/foto
-		</div>
-	</div>
 	
 	<div id="edit-page-navbar" class="navbar flex" data-page="edit-photo-page">
 		<div class="left">
@@ -418,7 +412,7 @@
 	</div>
 	
 	<div class="story flex all-seen-{{allSeen}}" data-user="{{user}}"
-	onclick="changePage('story-view-page',{user:'{{user}}', single:{{#if single}}true{{else}}false{{/if}} }, true)">
+	onclick="changePage('story-view-page',{user:'{{user}}', single:{{#if single}}true{{else}}false{{/if}} })">
 		<div class="page-logo" style="background-image:url('{{profileImg}}')">
 		</div>
 		<span>{{user}}</span>
