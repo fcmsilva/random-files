@@ -886,7 +886,7 @@ function addStoryHandler(){
 	
 	//Take picture
 	$page.find(".picture-btn").off("click").one("click",()=>{
-		let imgUrl = takePicture(video,$(".body-wrapper").width(),$(".body-wrapper").height())
+		let imgUrl = takePicture(videoEl,$(".body-wrapper").width(),$(".body-wrapper").height())
 		selectImage(imgUrl);
 	})
 
