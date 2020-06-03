@@ -69,6 +69,18 @@ function isVideo(url){
 	return url.indexOf("blob:") == 0;
 }
 
+//adjust video element to cover all of parent
+function adjustVideo(videoEl){
+	setTimeout(()=>{
+	console.log($(videoEl).width() , $(videoEl).height())
+	if($(videoEl).width() > $(videoEl).height())
+		$(videoEl).css("width","unset").css("height","100%");
+	else
+		$(videoEl).css("height","unset").css("width","100%")
+	},50)
+	$(videoEl).off("oncanplaythrough").on("oncanplaythrough", adjustVideo);
+}
+
 //-----------------------------------------
 //--DATA / DATA HELPERS
 //-----------------------------------------
@@ -767,6 +779,7 @@ function postPhotoHandler(postObj){
 
 	if(isVideo(postObj.imgUrl)){
 		$thumbnail.css("filter",postObj.filters).find("video").removeClass("hidden").attr("src",postObj.imgUrl);
+		adjustVideo($thumbnail.find("video"));
 	} else {
 		$thumbnail.css("background-image", "url('"+postObj.imgUrl+"')").css("filter",postObj.filters)
 	}
@@ -829,26 +842,54 @@ function postPhotoHandler(postObj){
 // -- ADD STORY PAGE --
 function addStoryHandler(){
 	let $page = $("#add-story-page")
-	let video = $page.find("video")[0]
-	getCamera(video)
-	.catch(()=>{
-		goToLastPage();
-	})
+	let videoEl = $page.find("video")[0]
+
+	getCamera(videoEl)
 	
 	$page.removeClass("picture-taken") 
 	$page.find(".picture-btn, .share-btn").off("click")
-	
-	$page.find(".picture-btn").off("click").one("click",()=>{
-		let imgUrl = takePicture(video,$(".body-wrapper").width(),$(".body-wrapper").height())
+
+	//Load gallery images and set their trigger
+	let $galleryEl = $page.find(".gallery-section .list").html("")
+	sessionData.gallery.imgs.forEach((img)=>{
+		let $img = $("<img src='"+img+"'></img>")
+		$galleryEl.append($img);
+		$img.click(function(){
+			selectImage($(this).attr("src"));
+		})
+	})
+
+	//Set gallery btn preview image
+	let thumbImage = sessionData.gallery.imgs[0]
+	$page.find(".gallery-preview").css("background-image","url('"+thumbImage+"')")
+
+	//Gallery-related triggers
+	$page.find(".gallery-preview").off("click").click(()=>{
+		$('.gallery-section').addClass('active');
+		$('.close-step1').addClass('hidden')
+	});
+	$page.find(".gallery-section .fa-times").off("click").click(()=>{
+		$('.gallery-section').removeClass('active');
+		$('.close-step1').removeClass('hidden')
+	});
+	$page.find(".gallery-section .fa-times").click();
+
+	//Loads up image preview
+	function selectImage(imgUrl){
 		$page.addClass("picture-taken")
 		$page.find("#story-preview").attr("src",imgUrl);
 		$page.find(".share-btn").off("click").one("click",()=>{
 			action.addStory(imgUrl)
 			changePage("home-page")
 		})
+	}
+	
+	//Take picture
+	$page.find(".picture-btn").off("click").one("click",()=>{
+		let imgUrl = takePicture(video,$(".body-wrapper").width(),$(".body-wrapper").height())
+		selectImage(imgUrl);
 	})
-	
-	
+
 }
 
 // -- VIEW STORY PAGE --
@@ -909,13 +950,15 @@ function storyViewHandler(data){
 	let stepTiming = 4000;
 
 	function show(i){
+		//clear timer
+		clearInterval(stepInterval);
+
 		if(i >= storyGroupObj.length)
 			return nextAction();
 		else if(i < 0)
 			i = imgIndex = 0;
-		
-		//reset & set timer
-		clearInterval(stepInterval);
+
+		//reset timer
 		stepInterval = setInterval(next,stepTiming)
 
 		//display current image and set as seen
@@ -999,6 +1042,8 @@ function thumbTrigger($thumbEl,postObj){
 	$thumbEl.click(()=>{
 		changePage("post-page",postObj);
 	});
+	if(postObj.isVideo)
+		adjustVideo($thumbEl.find("video"))
 }
 
 //if defined, call handler function for each template render

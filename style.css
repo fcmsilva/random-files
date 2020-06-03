@@ -554,6 +554,16 @@ video {
   background-position: center;
 }
 
+.post-thumbnail .image-block .video-indicator {
+  position: absolute;
+  bottom:2px;right:7px;
+  opacity:0.8;
+}
+.post-thumbnail .image-block .video-indicator i{
+  color:white;
+  text-shadow: 2px 2px rgba(0,0,0,0.2);
+}
+
 #donate-modal {
   font-size: 0.85em;
   padding: 20px;
@@ -734,11 +744,11 @@ div#donate-modal {
   background-size: cover;
   background-repeat: none;
 }
-.gallery-pages .gallery-selection {
+.gallery-pages .gallery-selection, .gallery-section .list {
   display: flex;
   flex-wrap: wrap;
 }
-.gallery-pages .gallery-selection img {
+.gallery-pages .gallery-selection img, .gallery-section .list img {
   width: 25%;
   flex: 0 0 auto;
   border: 1px solid white;
@@ -881,7 +891,9 @@ div#donate-modal {
 }
 #add-story-page.picture-taken .picture-btn,
 #add-story-page.picture-taken #story-camera,
-#add-story-page.picture-taken .close-step1 {
+#add-story-page.picture-taken .close-step1,
+#add-story-page.picture-taken .gallery-section,
+#add-story-page.picture-taken .gallery-preview {
   display: none;
 }
 #add-story-page.picture-taken .share-btn {
@@ -928,6 +940,63 @@ div#donate-modal {
 }
 #add-story-page .top-fixed .close-btn {
   margin: -5px 10px 0 0;
+}
+
+#add-story-page .gallery-preview{
+  position:fixed;
+  background:#0A0A0A;
+  bottom:10px;left:10px;
+  padding:15px;
+  border:2px solid #CCC;
+  box-shadow: 0 0 1px 1px rgba(255,255,255,0.3);
+  border-radius:8px;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+}
+#add-story-page .gallery-section{
+  position:fixed;
+  top:100%;left:0px;
+  height:80%;
+  width:100%;
+  background:#222;
+  transition-duration:0.3s;
+  z-index:99;
+}
+
+#add-story-page .gallery-section.active{
+  top:20%;
+  /*fix for header*/
+  overflow-y:visible;
+}
+
+#add-story-page .gallery-section.active .header{
+  display:block;
+}
+
+#add-story-page .gallery-section .header{
+  position: absolute;
+  display:none;
+  bottom: 100%;
+  left: 0;
+  padding: calc(20vh - 30px) 0 0 13px;
+  background: rgba(0,0,0,0.8);
+  width: 100%;
+  color: white;
+  height: 20vh;
+}
+
+#add-story-page .gallery-section img{
+  border-color:transparent;
+}
+
+#add-story-page #story-preview{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 100%;
+  width:unset;
+  transform: translate(-50%, -50%);
 }
 
 #story-view-page .story-wrapper .clicker-left,

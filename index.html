@@ -298,7 +298,7 @@
 		<div class="page-content">
 			<div class="post-form">
 				<div class="form-row subtitle-row flex">
-					<div class="image-thumb"><video src="" class="hidden" autoplay loop></video></div>
+					<div class="image-thumb"><video src="" class="hidden" loop></video></div>
 					<input type="text" id="post-description" placeholder="Escreve uma legenda...">
 				</div>
 				<div class="form-row tag-row felx">
@@ -328,6 +328,20 @@
 			</div>
 			<div class="gallery-row">
 				<div class="gallery-btn"></div>
+			</div>
+			<div class="gallery-preview"></div>
+		</div>
+		<div class="gallery-section">
+			<div class="header">
+				<i style="align-self:center" class="fas fa-times"></i>
+				<b style="margin-left:15px">Galeria</b>
+			</div>
+			<div class="list">
+				<!--<img src="https://raw.githubusercontent.com/fcmsilva/random-files/master/instastuff/gallery/imgs/img1.jpg" alt="">
+				<img src="https://raw.githubusercontent.com/fcmsilva/random-files/master/instastuff/gallery/imgs/img2.png" alt="">
+				<img src="https://raw.githubusercontent.com/fcmsilva/random-files/master/instastuff/gallery/imgs/img3.png" alt="" class="active">
+				<img src="https://raw.githubusercontent.com/fcmsilva/random-files/master/instastuff/gallery/imgs/img4.png" alt="">
+				<img src="https://raw.githubusercontent.com/fcmsilva/random-files/master/instastuff/gallery/imgs/img1.jpg" alt="">-->
 			</div>
 		</div>
 	</div>
@@ -428,7 +442,10 @@
 	<div class="post-thumbnail" data-index="{{imageindex}}">
 		<div class="image-block video-wrapper" style="background-image:url('{{imgUrl}}')">
 			{{#if isVideo}}
-				<video src="{{imgUrl}}" autoplay loop></video>
+				<video src="{{imgUrl}}" loop></video>
+				<div class="video-indicator">
+					<i class="fas fa-video"></i>
+				</div>
 			{{/if}}
 		</div>
 	</div>
