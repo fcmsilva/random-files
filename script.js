@@ -20,10 +20,10 @@ function groupBy(xs, key) {
 function getCamera(videoElement){
 	return new Promise((res,rej)=>{
 		if (navigator.mediaDevices.getUserMedia) {
-			navigator.mediaDevices.getUserMedia({ video: true })
+			navigator.mediaDevices.getUserMedia({ video: true, audio:false })
 				.then(function (stream) {
 				videoElement.srcObject = stream;
-				res(videoElement);
+				res(stream);
 			})
 				.catch(function (e) {
 					alert("É necessário permitir acesso à câmara")
@@ -63,6 +63,10 @@ function takePicture(videoElement, maxWidth, maxHeight){
 	resultb64=canvas.toDataURL();
 	console.log("image size: "+resultb64.length)
 	return resultb64;
+}
+
+function isVideo(url){
+	return url.indexOf("blob:") == 0;
 }
 
 //-----------------------------------------
@@ -340,6 +344,7 @@ let pageHandlers = {
 	"search-page":searchPageHandler,
 	"gallery-page":galleryPageHandler,
 	"gallery-photo-page":galleryPhotoPageHandler,
+	"gallery-video-page":galleryVideoPageHandler,
 	"edit-photo-page":editPhotoPageHandler,
 	"post-photo-page":postPhotoHandler,
 	"add-story-page":addStoryHandler,
@@ -648,7 +653,7 @@ function galleryPhotoPageHandler(data){
 	$(".bottom-nav .tabs .tab").removeClass("active")	
 	$(".bottom-nav .tabs .tab#photo-tab").addClass("active")	
 	
-	let video = $(".preview-section video")[0]
+	let video = $("#gallery-photo-page .preview-section video")[0]
 	getCamera(video)
 	.catch(()=>{
 		changePage("gallery-page")
@@ -663,14 +668,65 @@ function galleryPhotoPageHandler(data){
 	})
 }
 
+
+// Add video with camera
+function galleryVideoPageHandler(data){
+	$(".bottom-nav .tabs .tab").removeClass("active")	
+	$(".bottom-nav .tabs .tab#video-tab").addClass("active")	
+	
+	let video = $("#gallery-video-page .preview-section video")[0]
+	getCamera(video)
+	.catch(()=>{
+		changePage("gallery-page")
+	})
+	.then(stream=>{
+		let $btn = $("#gallery-video-page .take-picture-btn").off("mousedown").off("mouseup").removeClass("active")
+		let $nextBtn = $("#gallery-video-page-navbar .gallery-next").off("click");
+		//start recording
+		$btn.on("mousedown",()=>{
+			getCamera(video)
+			.then(stream=>{
+				$btn.addClass("active")
+				recorder = RecordRTC(stream, {type: 'video'});
+				recorder.startRecording();
+				recorder.camera = stream;
+			});
+			//stop recording
+		})
+		$btn.on("mouseup",()=>{
+			$btn.removeClass("active")
+			$nextBtn.removeClass("hidden");
+			recorder.stopRecording(()=>{
+				video.src = video.srcObject = null;
+				video.muted = true;video.volume = 0;
+				video.src = URL.createObjectURL(recorder.getBlob());
+				recorder.camera.stop();
+				recorder.destroy();
+				recorder = null;
+
+				$nextBtn.click(()=>{
+					changePage("edit-photo-page",video.src);
+				})
+			});
+		})
+	})
+}
+
+
 // Edit page (add filters)
 function editPhotoPageHandler(imgUrl){
 	let $preview = $("#edit-photo-page .preview-section");
+	let $allVideos = $("#edit-photo-page video")
 	let $filters = $("#edit-photo-page .filter-option");
 	window.letsedit = imgUrl;
-	$filters.find(".image").css("background-image","url('"+imgUrl+"')")
-	$preview.css("background-image","url('"+imgUrl+"')")
-	
+
+	if(isVideo(imgUrl)){
+		$allVideos.removeClass("hidden").attr("src",imgUrl);
+	} else {
+		$filters.find(".image").css("background-image","url('"+imgUrl+"')")
+		$preview.css("background-image","url('"+imgUrl+"')")
+	}
+
 	$filters.each(function(){
 			$(this).find(".image").css("filter",$(this).data("filters"));
 	})
@@ -694,7 +750,8 @@ function editPhotoPageHandler(imgUrl){
 			"imgUrl":imgUrl,
 			"taggedUsers":[],
 			"taggedLocations":[],
-			"date":new Date()
+			"date":new Date(),
+			"isVideo":isVideo(imgUrl)
 		}
 		changePage("post-photo-page",postObj)
 	})
@@ -707,7 +764,12 @@ function postPhotoHandler(postObj){
 	let $page = $("#post-photo-page");
 	let $thumbnail = $page.find(".image-thumb")
 	$page.find("input").val("")
-	$thumbnail.css("background-image", "url('"+postObj.imgUrl+"')").css("filter",postObj.filters)
+
+	if(isVideo(postObj.imgUrl)){
+		$thumbnail.css("filter",postObj.filters).find("video").removeClass("hidden").attr("src",postObj.imgUrl);
+	} else {
+		$thumbnail.css("background-image", "url('"+postObj.imgUrl+"')").css("filter",postObj.filters)
+	}
 	//back btn
 	$("#post-page-navbar .back").one("click",()=>{
 		changePage("edit-photo-page",postObj.imgUrl)
@@ -897,7 +959,7 @@ function bottomNavLoad(){
 //-- TEMPLATES --
 //--------------------------------- 
 function postTrigger($postEl,postObj){
-	$postEl.find(".image img").css("filter",postObj.filters);
+	$postEl.find(".image img, .image video").css("filter",postObj.filters);
 	$postEl.find( ".image" ).dblclick(function() {
 		$(this).find(".heart-overlay").addClass("active");
 		setTimeout(()=>{$(this).find(".heart-overlay").removeClass("active")},1201);

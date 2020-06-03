@@ -2,7 +2,7 @@
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>CodePen - PLUS</title>
+  <title>InstagramPLUS</title>
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css'>
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css'>
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css'>
@@ -200,10 +200,11 @@
 		<div class="right"><b><a class="gallery-next" href="#">Seguinte</a></b></div>
 	</div>
 
-	<div class="bottom-nav" id="gallery-page-bottom-nav" data-page="gallery-page gallery-photo-page">
+	<div class="bottom-nav" id="gallery-page-bottom-nav" data-page="gallery-page gallery-photo-page gallery-video-page">
 		<div class="tabs">
 			<div class="tab active nav-btn" id="gallery-tab" data-page="gallery-page">Galeria</div>
 			<div class="tab nav-btn" id="photo-tab" data-page="gallery-photo-page">Foto</div>
+			<div class="tab nav-btn" id="video-tab" data-page="gallery-video-page">Vídeo</div>
 		</div>
 	</div>
 	<div id="gallery-page" class="page gallery-pages">
@@ -225,10 +226,29 @@
 			<b style="margin-left:15px;font-size:0.9em;">Foto</b>
 		</div>
 	</div>
-	<div id="gallery-photo-page" class="page gallery-pages">
+	<div id="gallery-photo-page" class="page gallery-pages gallery-record-page">
 		<div class="page-content">
 			<div class="preview-section">
 				<video style="width:100%" src="" autoplay=true></video>
+			</div>
+			<div class="btn-section">
+				<img src="" alt="">
+				<div class="take-picture-btn"></div>
+			</div>
+		</div>
+	</div>
+
+	<div id="gallery-video-page-navbar" class="navbar flex" data-page="gallery-video-page">
+		<div class="left">
+			<i style="align-self:center" class="fas fa-times" onclick="changePage('home-page')"></i>
+			<b style="margin-left:15px;font-size:0.9em;">Vídeo</b>
+		</div>
+		<div class="right"><b><a class="gallery-next hidden" href="#">Seguinte</a></b></div>
+	</div>
+	<div id="gallery-video-page" class="page gallery-pages gallery-record-page">
+		<div class="page-content">
+			<div class="preview-section">
+				<video style="width:100%" src="" autoplay=true loop></video>
 			</div>
 			<div class="btn-section">
 				<img src="" alt="">
@@ -247,17 +267,19 @@
 	
 	<div id="edit-photo-page" class="page gallery-pages">
 		<div class="page-content">
-			<div class="preview-section"></div>
+			<div class="preview-section">
+				<video src="" class="hidden" autoplay loop></video>
+			</div>
 			<div class="filter-section">
-				<div class="filter-option active default" data-filters="">	
-					<div class="image"></div>
+				<div class="filter-option active default" data-filters="contrast(1)">	
+					<div class="image"><video src="" class="hidden" autoplay loop></video></div>
 					<span>Normal</span>
 				</div>
 				<div class="filter-option contrast" data-filters="contrast(2)">
-					<div class="image"></div>
+					<div class="image"><video src="" class="hidden" autoplay loop></video></div>
 					<span>Contrast</span></div>
 				<div class="filter-option sepia" data-filters="sepia(1)">
-					<div class="image"></div>
+					<div class="image"><video src="" class="hidden" autoplay loop></video></div>
 					<span>Sepia</span>
 				</div>
 			</div>
@@ -276,7 +298,7 @@
 		<div class="page-content">
 			<div class="post-form">
 				<div class="form-row subtitle-row flex">
-					<div class="image-thumb"></div>
+					<div class="image-thumb"><video src="" class="hidden" autoplay loop></video></div>
 					<input type="text" id="post-description" placeholder="Escreve uma legenda...">
 				</div>
 				<div class="form-row tag-row felx">
@@ -360,7 +382,11 @@
 		<div class="content">
 			<div class="image">
 				<div class="heart-overlay"><i class="fas fa-heart"></i></div>
-				<img src="{{imgUrl}}" alt="">
+				{{#if isVideo}}
+					<video src="{{imgUrl}}" autoplay loop></video>
+				{{else}}
+					<img src="{{imgUrl}}" alt="">
+				{{/if}}
 			</div>
 			<div class="bottom-info">
 				<div class="interaction-bar flex">
@@ -400,7 +426,11 @@
 	</div>
 	
 	<div class="post-thumbnail" data-index="{{imageindex}}">
-		<div class="image-block" style="background-image:url('{{imgUrl}}')"></div>
+		<div class="image-block video-wrapper" style="background-image:url('{{imgUrl}}')">
+			{{#if isVideo}}
+				<video src="{{imgUrl}}" autoplay loop></video>
+			{{/if}}
+		</div>
 	</div>
 	
 	<div class="search-profile flex" onclick='changePage("profile-page",{handler:"{{handler}}" })'>
@@ -421,6 +451,7 @@
 	<div class="page-logo" style="background-image:url('{{profileImage}}')"></div>
 </div>
 <!-- partial -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/RecordRTC/5.6.1/RecordRTC.min.js"></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js'></script>

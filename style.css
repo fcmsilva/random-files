@@ -339,7 +339,8 @@ video {
   visibility: visible;
   animation: heart-jump 1.2s forwards;
 }
-.post .content .image img {
+/*post image or video*/
+.post .content .image > * {
   width: 100%;
 }
 .post .content .bottom-info {
@@ -747,29 +748,35 @@ div#donate-modal {
   opacity: 0.3;
 }
 
-#gallery-photo-page .page-content {
+.gallery-record-page .page-content {
   padding-bottom: 40px;
 }
-#gallery-photo-page .preview-section {
+.gallery-record-page .preview-section {
   height: unset;
   background: white;
   background: white;
   position: relative;
   overflow: visible;
 }
-#gallery-photo-page .preview-section video {
+/*all preview videos*/
+.video-wrapper{
+  position:relative;
+  overflow:hidden;
+}
+.preview-section video, .filter-option video, .image-thumb video, .video-wrapper video {
   position: absolute;
   top: 50%;
   left: 50%;
   width: 100%;
   transform: translate(-50%, -50%) rotateY(180deg);
 }
-#gallery-photo-page .btn-section {
+
+.gallery-record-page .btn-section {
   flex: 1 1 auto;
   background: white;
   position: relative;
 }
-#gallery-photo-page .btn-section .take-picture-btn {
+.gallery-record-page .btn-section .take-picture-btn {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -779,8 +786,15 @@ div#donate-modal {
   background: white;
   transform: translate(-50%, -50%);
 }
-#gallery-photo-page .btn-section .take-picture-btn:active {
+.gallery-record-page .btn-section .take-picture-btn:active {
   border-color: #ccc;
+}
+
+#gallery-video-page .btn-section .take-picture-btn{
+  transition-duration:0.2s;
+}
+#gallery-video-page .btn-section .take-picture-btn.active{
+  border-color:crimson!important;
 }
 
 #edit-photo-page .filter-option {
@@ -842,6 +856,7 @@ div#donate-modal {
   background-repeat: no-repeat;
   margin-right: 10px;
   flex: 0 0 auto;
+  position:relative;
 }
 #post-photo-page .form-row.subtitle-row input#post-description {
   font-size: 0.8em;
