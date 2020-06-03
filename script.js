@@ -666,6 +666,8 @@ function galleryPhotoPageHandler(data){
 	$(".bottom-nav .tabs .tab#photo-tab").addClass("active")	
 	
 	let video = $("#gallery-photo-page .preview-section video")[0]
+	adjustVideo(video);
+
 	getCamera(video)
 	.catch(()=>{
 		changePage("gallery-page")
@@ -692,6 +694,7 @@ function galleryVideoPageHandler(data){
 		changePage("gallery-page")
 	})
 	.then(stream=>{
+		adjustVideo(video);
 		let $btn = $("#gallery-video-page .take-picture-btn").off("mousedown").off("mouseup").removeClass("active")
 		let $nextBtn = $("#gallery-video-page-navbar .gallery-next").off("click");
 		//start recording
@@ -734,10 +737,18 @@ function editPhotoPageHandler(imgUrl){
 
 	if(isVideo(imgUrl)){
 		$allVideos.removeClass("hidden").attr("src",imgUrl);
+		$preview.css("background-image","")
+		$filters.find(".image").css("background-image","")
 	} else {
+		$allVideos.addClass("hidden")
 		$filters.find(".image").css("background-image","url('"+imgUrl+"')")
 		$preview.css("background-image","url('"+imgUrl+"')")
 	}
+
+	if(isVideo(imgUrl))
+	$allVideos.each(i=>{
+		adjustVideo($allVideos[i])
+	})
 
 	$filters.each(function(){
 			$(this).find(".image").css("filter",$(this).data("filters"));
@@ -778,6 +789,7 @@ function postPhotoHandler(postObj){
 	$page.find("input").val("")
 
 	if(isVideo(postObj.imgUrl)){
+		$thumbnail.css("background-image","")
 		$thumbnail.css("filter",postObj.filters).find("video").removeClass("hidden").attr("src",postObj.imgUrl);
 		adjustVideo($thumbnail.find("video"));
 	} else {

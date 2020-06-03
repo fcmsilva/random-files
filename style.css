@@ -823,6 +823,7 @@ div#donate-modal {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  overflow:hidden;
 }
 #edit-photo-page .filter-option.active {
   color: #111;
