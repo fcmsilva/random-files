@@ -698,7 +698,7 @@ function galleryVideoPageHandler(data){
 		let $btn = $("#gallery-video-page .take-picture-btn").off("mousedown").off("mouseup").removeClass("active")
 		let $nextBtn = $("#gallery-video-page-navbar .gallery-next").off("click");
 		//start recording
-		$btn.on("pointerdown",()=>{
+		$btn.on("pointerdown touchstart",()=>{
 			getCamera(video)
 			.then(stream=>{
 				$btn.addClass("active")
@@ -709,7 +709,7 @@ function galleryVideoPageHandler(data){
 		})
 		
 		//stop recording
-		$btn.on("pointerup",()=>{
+		$btn.on("pointerup touchend",()=>{
 			$btn.removeClass("active")
 			$nextBtn.removeClass("hidden");
 			recorder.stopRecording(()=>{
