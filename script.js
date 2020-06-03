@@ -73,14 +73,21 @@ function isVideo(url){
 function adjustVideo(videoEl){
 	$(videoEl).css("width","unset").css("height","unset");
 	setTimeout(()=>{
-	console.log($(videoEl).width() , $(videoEl).height())
-	if($(videoEl).width() > $(videoEl).height())
-		$(videoEl).css("width","unset").css("height","100%");
-	else
-		$(videoEl).css("height","unset").css("width","100%")
+		let width = $(videoEl).width();
+		let height = $(videoEl).height();
+		if(videoEl.srcObject){
+			let settings = videoEl.srcObject.getVideoTracks()[0].getSettings();
+			width = settings.width;
+			height = settings.height;
+		}
+
+		if(width > height)
+			$(videoEl).css("width","unset").css("height","100%");
+		else
+			$(videoEl).css("height","unset").css("width","100%")
 	},50)
-	$(videoEl).off("oncanplaythrough").on("oncanplaythrough", adjustVideo);
 }
+
 
 //-----------------------------------------
 //--DATA / DATA HELPERS
