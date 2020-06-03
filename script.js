@@ -71,6 +71,7 @@ function isVideo(url){
 
 //adjust video element to cover all of parent
 function adjustVideo(videoEl){
+	$(videoEl).css("width","unset").css("height","unset");
 	setTimeout(()=>{
 	console.log($(videoEl).width() , $(videoEl).height())
 	if($(videoEl).width() > $(videoEl).height())
